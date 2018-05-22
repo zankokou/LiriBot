@@ -1,0 +1,32 @@
+{
+  "name": "liribot",
+  "version": "1.0.0",
+  "description": "Node.js - Using API to display information",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zankokou/LiriBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zankokou/LiriBot/issues"
+  },
+  "homepage": "https://github.com/zankokou/LiriBot#readme",
+  "dependencies": {
+    "dotenv": "^5.0.1",
+    "gitignore": "^0.6.0",
+    "json": "^9.0.6",
+    "keys": "^0.1.2",
+    "node-spotify-api": "^1.0.7",
+    "omdbapi": "^2.0.1",
+    "request": "^2.86.0",
+    "spotify": "^0.3.0",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "keywords": []
+}
