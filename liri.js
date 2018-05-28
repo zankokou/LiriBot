@@ -10,10 +10,39 @@ const omdbKey = keys.omdb.key;
 var spotifyAPI = new Spotify(keys.spotify)
 var client = new Twitter(keys.twitter);
 
-// console.log(client);
 
 let inputString = process.argv;
 let cmd = inputString[2];
+
+var fs = require('fs');
+var userInput = ""
+
+if (cmd === 'do-what-it-says') {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            return console.log(error);
+        }
+        data = data.replace(/['"]+/g, '');
+        var dataArr = data.split(',');
+
+        var command = dataArr[0];
+        userInput = dataArr[1];
+
+        switch (command) {
+            case "movie-this":
+                callOmdb();
+                break;
+
+            case "spotify-this-song":
+                callSpotify();
+                break;
+
+            case "my-tweets":
+                callTwitter();
+                break;
+        };
+    });
+}
 
 switch (cmd) {
     case "movie-this":
@@ -27,21 +56,22 @@ switch (cmd) {
     case "my-tweets":
         callTwitter();
         break;
+
 };
 
 
 //calling omdb function
 function callOmdb() {
-    var movieName = ""
+
     for (i = 3; i < inputString.length; i++) {
-        movieName = movieName + inputString[i] + " ";
+        userInput = userInput + inputString[i] + " ";
 
     }
-    if (movieName == "") {
-        movieName = "Mr. Nobody";
+    if (userInput == "") {
+        userInput = "Mr. Nobody";
     }
-    console.log(movieName);
-    let queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=" + omdbKey;
+    console.log(userInput);
+    let queryUrl = "http://www.omdbapi.com/?t=" + userInput + "&y=&plot=short&apikey=" + omdbKey;
 
     request(queryUrl, function (error, response, body) {
 
@@ -68,16 +98,15 @@ function callOmdb() {
 
 //spotify function
 function callSpotify() {
-    var songName = ""
     for (i = 3; i < inputString.length; i++) {
-        songName = songName + inputString[i] + " ";
+        userInput = userInput + inputString[i] + " ";
     }
 
-    if (songName == "") {
-        songName = "Never Gonna Give You Up";
+    if (userInput == "") {
+        userInput = "Never Gonna Give You Up";
     }
-    // console.log(songName);
-    spotifyAPI.search({ type: 'track', query: songName, limit: 1 }, function (err, data) {
+    console.log(userInput);
+    spotifyAPI.search({ type: 'track', query: userInput, limit: 1 }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
@@ -92,13 +121,13 @@ function callSpotify() {
 
 
 //twitter call
-function callTwitter(){
+function callTwitter() {
     var userName = "Kennygbf2017"
 
-    client.get('statuses/user_timeline', userName, function(error, tweets, response) {
+    client.get('statuses/user_timeline', userName, function (error, tweets, response) {
         if (!error) {
             console.log(tweets);
-            for (i = 0; i < tweets.length && i < 20; i ++) {
+            for (i = 0; i < tweets.length && i < 20; i++) {
                 console.log(tweets[i].text);
                 console.log(tweets[i].created_at.slice(0, 20));
                 console.log("")
@@ -106,3 +135,4 @@ function callTwitter(){
         };
     });
 }//end of twitter
+
