@@ -8,8 +8,9 @@ const request = require("request");
 const omdbKey = keys.omdb.key;
 
 var spotifyAPI = new Spotify(keys.spotify)
-// var client = new Twitter(keys.twitter);
-// console.log(spotifyAPI)
+var client = new Twitter(keys.twitter);
+
+// console.log(client);
 
 let inputString = process.argv;
 let cmd = inputString[2];
@@ -21,6 +22,10 @@ switch (cmd) {
 
     case "spotify-this-song":
         callSpotify();
+        break;
+
+    case "my-tweets":
+        callTwitter();
         break;
 };
 
@@ -63,24 +68,41 @@ function callOmdb() {
 
 //spotify function
 function callSpotify() {
+    var songName = ""
+    for (i = 3; i < inputString.length; i++) {
+        songName = songName + inputString[i] + " ";
+    }
 
-
-    // var songName = ""
-    // for (i = 3; i < inputString.length; i++) {
-    //     songName = songName + inputString[i] + " ";
-    // }
+    if (songName == "") {
+        songName = "Never Gonna Give You Up";
+    }
     // console.log(songName);
-    spotifyAPI.search({ type: 'track', query: 'Alone', limit: 1}, function(err, data) {
+    spotifyAPI.search({ type: 'track', query: songName, limit: 1 }, function (err, data) {
         if (err) {
-          return console.log('Error occurred: ' + err);
+            return console.log('Error occurred: ' + err);
         }
-        // console.log(data.tracks.items[0].artists[0]);
-      var album = data.tracks.items[0].album.name;
-      var artist = data.tracks.items[0].artists[0].name;
-      var song = data.tracks.items[0].name;
-      var url = data.tracks.items[0].preview_url;
-      console.log('You selected the song ' + song + ' by the artist ' + artist + '\n' + 'This song is on the "' + album + '" album.' + '\nYou can find a preview to the song here: ' + '\n' + url);
-    }); 
+        console.log(data.tracks.items[0].artists[0]);
+        var album = data.tracks.items[0].album.name;
+        var artist = data.tracks.items[0].artists[0].name;
+        var song = data.tracks.items[0].name;
+        var url = data.tracks.items[0].preview_url;
+        console.log('You selected the song ' + song + ' by the artist ' + artist + '\n' + 'This song is on the "' + album + '" album.' + '\nYou can find a preview to the song here: ' + '\n' + url);
+    });
 };//end of spotify function
 
-callSpotify();
+
+//twitter call
+function callTwitter(){
+    var userName = "Kennygbf2017"
+
+    client.get('statuses/user_timeline', userName, function(error, tweets, response) {
+        if (!error) {
+            console.log(tweets);
+            for (i = 0; i < tweets.length && i < 20; i ++) {
+                console.log(tweets[i].text);
+                console.log(tweets[i].created_at.slice(0, 20));
+                console.log("")
+            };
+        };
+    });
+}//end of twitter
